@@ -8,8 +8,8 @@ export const getAllInstrument = async () => {
         const instruments = constituents.map(item => ({ codeInstrument: item.codeInstrument, name: item.name }))
         return instruments
     } catch (error) {
-        console.error('Error al obtener los datos:', error);
-        throw error;
+        console.error('Error al obtener los datos:', error)
+        throw error
     }
 }
 
@@ -24,7 +24,7 @@ export const getOneIndexName = async (name) => {
         }
 
         if (name === 'IPSA') {
-            infoHistory.info.details = historyIpsa.data.info;
+            infoHistory.info.details = historyIpsa.data.info
             infoHistory.info.historyData = historyIpsa.data.chart.reduce((latest, current) =>
                 current.datetimeLastPriceTs > latest.datetimeLastPriceTs ? current : latest
             )
@@ -42,7 +42,7 @@ export const getOneIndexName = async (name) => {
         console.error('Error al obtener los datos:', error)
         throw error
     }
-};
+}
 
 export const getNameChart = async (name) => {
     try {
@@ -92,14 +92,13 @@ export const getNameSummary = async (name) => {
 
 export const getAllData = async (name) => {
     try {
-        let dataPart1 = {};
-        let dataPart2 = {};
+        let dataPart1 = {}
+        let dataPart2 = {}
 
-        // Suponiendo que los datos son un objeto con una propiedad 'constituents' o algo similar
-        let allData = {}; // Variable para almacenar los datos completos
+        let allData = {}
 
         if (name === 'IPSA') {
-            allData = constituensData.data.constituents; // Suponiendo que esta es una lista de datos
+            allData = constituensData.data.constituents
         } else if (name === 'IGPA') {
             throw new Error('No hay información de esta tabla')
         } else if (name === 'NASDAQ') {

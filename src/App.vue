@@ -60,14 +60,14 @@ export default defineComponent({
 
     const init = async () => {
       if (searchStore.searchType === 1) {
-        await handleSearchInstrument(searchStore.instrumentName);
+        await handleSearchInstrument(searchStore.instrumentName)
         await tableFunction(searchStore.indexName)
       } else if (searchStore.searchType === 2) {
-        await handleSearchIndex(searchStore.indexName);
+        await handleSearchIndex(searchStore.indexName)
       } else {
-        await handleSearchIndex('IPSA');
+        await handleSearchIndex('IPSA')
       }
-    };
+    }
 
     onMounted(init)
 
@@ -81,7 +81,7 @@ export default defineComponent({
       } catch (error) {
         console.error('Error al obtener los instrumentos:', error)
       }
-    };
+    }
 
     const handleSearchIndex = async (data) => {
       try {
@@ -97,13 +97,13 @@ export default defineComponent({
       } catch (error) {
         console.error('Error al obtener los instrumentos:', error)
       }
-    };
+    }
 
     const tableFunction = async (data) => {
       const { dataPart1, dataPart2 } = await getAllData(data)
       instrumentData1.value = dataPart1
       instrumentData2.value = dataPart2
-      itsActive.value = Object.keys(headerData.value).length > 0;
+      itsActive.value = Object.keys(headerData.value).length > 0
     }
 
     return {
@@ -115,9 +115,9 @@ export default defineComponent({
       itsActive,
       instrumentData1,
       instrumentData2
-    };
+    }
   },
-});
+})
 </script>
 
 

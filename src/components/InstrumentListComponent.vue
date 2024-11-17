@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import { ref, computed, defineComponent } from 'vue';
-import InstrumentItemComponent from './InstrumentItemComponent.vue';
+import { ref, computed, defineComponent } from 'vue'
+import InstrumentItemComponent from './InstrumentItemComponent.vue'
 
 export default defineComponent({
   name: 'InstrumentList',
@@ -59,41 +59,41 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const instruments = ref([...props.instrumentData]);
-    const sortKey = ref('name');
-    const sortAsc = ref(true);
+    const instruments = ref([...props.instrumentData])
+    const sortKey = ref('name')
+    const sortAsc = ref(true)
     // Computed para instrumentos ordenados
     const sortedInstruments = computed(() => {
       return instruments.value.slice().sort((a, b) => {
-        if (!sortKey.value) return 0;
+        if (!sortKey.value) return 0
 
-        const valueA = a[sortKey.value];
-        const valueB = b[sortKey.value];
+        const valueA = a[sortKey.value]
+        const valueB = b[sortKey.value]
 
         if (typeof valueA === 'string' && typeof valueB === 'string') {
           return sortAsc.value
             ? valueA.localeCompare(valueB)
-            : valueB.localeCompare(valueA);
+            : valueB.localeCompare(valueA)
         }
 
-        return sortAsc.value ? valueA - valueB : valueB - valueA;
-      });
-    });
+        return sortAsc.value ? valueA - valueB : valueB - valueA
+      })
+    })
 
     // Método para cambiar el orden
     const sort = (key) => {
       if (sortKey.value === key) {
-        sortAsc.value = !sortAsc.value;
+        sortAsc.value = !sortAsc.value
       } else {
-        sortKey.value = key;
-        sortAsc.value = true;
+        sortKey.value = key
+        sortAsc.value = true
       }
-    };
+    }
 
     // Emitir evento al padre
     const handleInstrumentSelected = (instrument) => {
-      emit('searchData', instrument);
-    };
+      emit('searchData', instrument)
+    }
 
     return {
       instruments,
@@ -102,9 +102,9 @@ export default defineComponent({
       sortedInstruments,
       sort,
       handleInstrumentSelected
-    };
+    }
   }
-});
+})
 </script>
 
 <style scoped>

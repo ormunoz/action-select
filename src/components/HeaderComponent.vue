@@ -29,41 +29,41 @@
       }
     },
     setup(props, { emit }) {
-      const info = ref({});
-      const charDetail = ref({});
+      const info = ref({})
+      const charDetail = ref({})
   
       const updateData = () => {
         const { details } = props.headerData.info
         const { historyData } = props.headerData.info
   
         // Asegura reactividad
-        info.value = { ...details };
-        charDetail.value = { ...historyData };
-      };
+        info.value = { ...details }
+        charDetail.value = { ...historyData }
+      }
   
       const init = async () => {
         try {
-          updateData();
+          updateData()
         } catch (error) {
-          console.error('Error al obtener los instrumentos:', error);
+          console.error('Error al obtener los instrumentos:', error)
         }
       };
   
-      onMounted(init);
+      onMounted(init)
   
-      watch(() => props.headerData, updateData, { deep: true });
+      watch(() => props.headerData, updateData, { deep: true })
   
       const getClass = (value) => {
-        if (value > 0) return 'positive';
-        if (value < 0) return 'negative';
-        return 'neutral';
-      };
+        if (value > 0) return 'positive'
+        if (value < 0) return 'negative'
+        return 'neutral'
+      }
   
       const formatSign = (value) => {
         if (value > 0) return `+${value.toFixed(2)}`
         if (value < 0) return `${value.toFixed(2)}`
         return value
-      };
+      }
   
       return {
         info,

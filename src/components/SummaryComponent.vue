@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { ref, defineComponent, watch } from 'vue';
+import { ref, defineComponent, watch } from 'vue'
 
 export default defineComponent({
     props: {
@@ -104,32 +104,32 @@ export default defineComponent({
         }
     },
     setup(props) {
-        const infoData = ref(props.summaryData.info);
-        const priceData = ref(props.summaryData.price);
-        const activeTab = ref('detalle');
+        const infoData = ref(props.summaryData.info)
+        const priceData = ref(props.summaryData.price)
+        const activeTab = ref('detalle')
 
         const updateData = () => {
-            infoData.value = { ...props.summaryData.info };
-            priceData.value = { ...props.summaryData.price };
-        };
+            infoData.value = { ...props.summaryData.info }
+            priceData.value = { ...props.summaryData.price }
+        }
 
-        watch(() => props.summaryData, updateData, { deep: true });
+        watch(() => props.summaryData, updateData, { deep: true })
 
         const handleOtherTab = () => {
-            activeTab.value = 'resumen';
-        };
+            activeTab.value = 'resumen'
+        }
 
         const getClass = (value) => {
-            if (value > 0) return 'positive';
-            if (value < 0) return 'negative';
-            return 'neutral';
-        };
+            if (value > 0) return 'positive'
+            if (value < 0) return 'negative'
+            return 'neutral'
+        }
 
         const formatSign = (value) => {
-            if (value > 0) return `+${value.toFixed(2)}`;
-            if (value < 0) return `${value.toFixed(2)}`;
-            return value.toFixed(2);
-        };
+            if (value > 0) return `+${value.toFixed(2)}`
+            if (value < 0) return `${value.toFixed(2)}`
+            return value.toFixed(2)
+        }
 
         return {
             infoData,
@@ -138,9 +138,9 @@ export default defineComponent({
             handleOtherTab,
             getClass,
             formatSign
-        };
+        }
     }
-});
+})
 </script>
 
 <style scoped>
