@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid  mt-3">
+  <div class="container-fluid mt-3">
     <!-- Gráfico -->
     <div class="chart-container mb-4">
       <canvas ref="chartCanvas"></canvas>
@@ -15,20 +15,16 @@
         </button>
       </li>
     </ul>
-
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, onUnmounted } from "vue";
-import { Chart, registerables } from "chart.js";
-import Datepicker from '../../node_modules/vue3-datepicker/dist/vue3-datepicker.mjs';
+import { defineComponent, ref, onMounted, onUnmounted, watch } from "vue"
+import { Chart, registerables } from "chart.js"
 
 export default defineComponent({
   name: "ChartWithTabs",
-  components: {
-    Datepicker
-  },
+  components: {},
   props: {
     chartData: {
       type: Array,
@@ -38,15 +34,13 @@ export default defineComponent({
   setup(props) {
     const chartCanvas = ref(null)
     let chartInstance = null
-    const selectedDate = new Date()
-    const chartEje = props.chartData.map(item => item.lastPrice)
-    const minPrice = Math.min(...chartEje)
-    const maxPrice = Math.max(...chartEje)
-    const labels = props.chartData.map((item, index) => '')
-    Chart.register(...registerables)
 
-    const selectedTab = ref("1D")
+    const selectedDate = new Date()
+    Chart.register(...registerables)
+    const selectedTab = ref("All")
+
     const tabs = [
+      { label: "All", value: "All" },
       { label: "1D", value: "1D" },
       { label: "1S", value: "1S" },
       { label: "1M", value: "1M" },
@@ -56,23 +50,17 @@ export default defineComponent({
       { label: "5A", value: "5A" },
     ];
 
-
-
-    const openCalendar = () => {
-      alert("Abrir selector de fecha")
-    };
-
     const createChart = () => {
       if (chartCanvas.value) {
-        chartCanvas.value.height = 300; // Ajusta el tamaño del canvas
+        chartCanvas.value.height = 300
         chartInstance = new Chart(chartCanvas.value, {
           type: "line",
           data: {
-            labels: labels,
+            labels: props.chartData.map(() => ''),
             datasets: [
               {
                 label: "Grafico",
-                data: chartEje,
+                data: props.chartData.map(item => item.lastPrice),
                 backgroundColor: "rgba(0, 123, 255, 0.5)",
                 borderColor: "rgba(0, 123, 255, 1)",
                 fill: true,
@@ -93,126 +81,109 @@ export default defineComponent({
               },
               y: {
                 beginAtZero: false,
-                min: minPrice,
-                max: maxPrice,
-                stepSize: (maxPrice - minPrice) / 5,  // Define el número de intervalos en el gráfico
-                callback: function (value) {
-                  if (value >= minPrice && value <= maxPrice) {
-                    return value;
-                  }
-                  return "";
-                },
+                min: Math.min(...props.chartData.map(item => item.lastPrice)),
+                max: Math.max(...props.chartData.map(item => item.lastPrice)),
+                stepSize: (Math.max(...props.chartData.map(item => item.lastPrice)) - Math.min(...props.chartData.map(item => item.lastPrice))) / 5,
               },
             },
           },
-        });
+        })
       }
-    };
-
-    const resizeChart = () => {
-      if (chartInstance) {
-        chartInstance.resize();
-      }
-    }
-
-    const getDateRange = (range) => {
-      const currentDate = new Date();
-      let startDate;
-
-      switch (range) {
-        case "1D":  // 1 día
-          startDate = new Date(currentDate);
-          startDate.setDate(currentDate.getDate() - 1)
-          break;
-        case "1S":  // 1 semana
-          startDate = new Date(currentDate);
-          startDate.setDate(currentDate.getDate() - 7)
-          break;
-        case "1M":  // 1 mes
-          startDate = new Date(currentDate);
-          startDate.setMonth(currentDate.getMonth() - 1)
-          break;
-        case "3M":  // 3 meses
-          startDate = new Date(currentDate);
-          startDate.setMonth(currentDate.getMonth() - 3)
-          break;
-        case "6M":  // 6 meses
-          startDate = new Date(currentDate);
-          startDate.setMonth(currentDate.getMonth() - 6)
-          break;
-        case "1A":  // 1 año
-          startDate = new Date(currentDate);
-          startDate.setFullYear(currentDate.getFullYear() - 1)
-          break;
-        case "5A":  // 5 años
-          startDate = new Date(currentDate);
-          startDate.setFullYear(currentDate.getFullYear() - 5)
-          break;
-        default:
-          startDate = new Date(currentDate);
-          break;
-      }
-
-      return { startDate, endDate: currentDate };
     }
 
     const updateChart = (filteredData) => {
-      const chartEje = filteredData.map(item => item.lastPrice);
-      let minPrice, maxPrice
-      if (chartEje.length > 0) {
-        minPrice = Math.min(...chartEje);
-        maxPrice = Math.max(...chartEje);
-      } else {
-        minPrice = 0
-        maxPrice = 100
-      }
-      if (chartEje.length === 1) {
-        minPrice = chartEje[0] - 100;
-        maxPrice = chartEje[0] + 100;
-      }
+      const chartEje = filteredData.map(item => item.lastPrice)
       const labels = filteredData.map(() => '')
+      const minPrice = Math.min(...chartEje)
+      const maxPrice = Math.max(...chartEje)
 
       if (chartInstance) {
-        chartInstance.data.labels = labels;
-        chartInstance.data.datasets[0].data = chartEje;
-        chartInstance.options.scales.y.min = minPrice;
-        chartInstance.options.scales.y.max = maxPrice;
-        chartInstance.update();
+        chartInstance.data.labels = labels
+        chartInstance.data.datasets[0].data = chartEje
+        chartInstance.options.scales.y.min = minPrice
+        chartInstance.options.scales.y.max = maxPrice
+        chartInstance.update()
       }
+    };
+
+    const getDateRange = (range) => {
+      const currentDate = new Date()
+      let startDate;
+
+      switch (range) {
+        case "1D":
+          startDate = new Date(currentDate)
+          startDate.setDate(currentDate.getDate() - 1)
+          break;
+        case "1S":
+          startDate = new Date(currentDate)
+          startDate.setDate(currentDate.getDate() - 7)
+          break;
+        case "1M":
+          startDate = new Date(currentDate)
+          startDate.setMonth(currentDate.getMonth() - 1)
+          break;
+        case "3M":
+          startDate = new Date(currentDate);
+          startDate.setMonth(currentDate.getMonth() - 3)
+          break;
+        case "6M":
+          startDate = new Date(currentDate);
+          startDate.setMonth(currentDate.getMonth() - 6)
+          break;
+        case "1A":
+          startDate = new Date(currentDate)
+          startDate.setFullYear(currentDate.getFullYear() - 1)
+          break;
+        case "5A":
+          startDate = new Date(currentDate)
+          startDate.setFullYear(currentDate.getFullYear() - 5)
+          break;
+        default:
+          startDate = new Date(currentDate)
+          break;
+      }
+
+      return { startDate, endDate: currentDate }
     };
 
     const selectTab = (value) => {
       selectedTab.value = value
+      if (value === "All") {
+        updateChart(props.chartData)
+        return
+      }
       const { startDate, endDate } = getDateRange(value)
       const filteredData = props.chartData.filter(item => {
         const itemDate = new Date(item.datetimeLastPrice)
         return itemDate >= startDate && itemDate <= endDate
-      })
+      });
       updateChart(filteredData)
     }
 
+    watch(() => props.chartData, () => {
+      selectTab(selectedTab.value)
+    }, { deep: true })
+
     onMounted(() => {
-      createChart();
-      window.addEventListener("resize", resizeChart);
-    })
+      createChart()
+    });
 
     onUnmounted(() => {
       if (chartInstance) {
-        chartInstance.destroy();
+        chartInstance.destroy()
       }
-      window.removeEventListener("resize", resizeChart);
-    })
+    });
 
     return {
       chartCanvas,
       selectedTab,
       tabs,
       selectTab,
-      openCalendar,
       selectedDate,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped>
@@ -224,53 +195,40 @@ export default defineComponent({
 canvas {
   width: 100%;
   height: 300px;
-  /* Ajusta este valor según lo que necesites */
 }
 
 .nav-tabs .nav-link.active {
   background-color: #3683ee;
   color: rgb(19, 19, 19);
   font-weight: bold;
-  /* Engrosar las letras */
 }
 
 .nav-tabs .nav-link {
   background-color: #2d2e2e;
   border: 1px solid rgb(95, 93, 93);
-  /* Borde rojo */
   color: white;
   font-weight: bold;
-  /* Engrosar las letras */
   border-radius: 0;
-  /* Sin bordes redondeados por defecto */
-}
-
-.byutton-calendary {
-  background-color: #2d2e2e;
-  border: 1px solid rgb(95, 93, 93);
-  /* Borde rojo */
-  color: white;
-  font-weight: bold;
-  /* Engrosar las letras */
-  border-radius: 5px;
-  height: 43px;
-  /* Sin bordes redondeados por defecto */
 }
 
 .nav-tabs .nav-link.firstTab {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  /* Puntas redondas en el primer botón */
 }
 
 .nav-tabs .nav-link.lastTab {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
-  /* Puntas redondas en el último botón */
 }
 
-
-
+.byutton-calendary {
+  background-color: #2d2e2e;
+  border: 1px solid rgb(95, 93, 93);
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  height: 43px;
+}
 
 .btn-dark {
   display: flex;
@@ -280,11 +238,9 @@ canvas {
 
 .nav-tabs {
   border-bottom: none;
-  /* Elimina el subrayado general */
 }
 
 .nav-tabs .nav-link.active {
   border: #2d2e2e;
-  /* Añade un borde inferior solo a la pestaña activa */
 }
 </style>
