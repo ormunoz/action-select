@@ -48,7 +48,7 @@ export default defineComponent({
       { label: "6M", value: "6M" },
       { label: "1A", value: "1A" },
       { label: "5A", value: "5A" },
-    ];
+    ]
 
     const createChart = () => {
       if (chartCanvas.value) {
@@ -104,11 +104,11 @@ export default defineComponent({
         chartInstance.options.scales.y.max = maxPrice
         chartInstance.update()
       }
-    };
+    }
 
     const getDateRange = (range) => {
       const currentDate = new Date()
-      let startDate;
+      let startDate
 
       switch (range) {
         case "1D":
@@ -124,11 +124,11 @@ export default defineComponent({
           startDate.setMonth(currentDate.getMonth() - 1)
           break;
         case "3M":
-          startDate = new Date(currentDate);
+          startDate = new Date(currentDate)
           startDate.setMonth(currentDate.getMonth() - 3)
           break;
         case "6M":
-          startDate = new Date(currentDate);
+          startDate = new Date(currentDate)
           startDate.setMonth(currentDate.getMonth() - 6)
           break;
         case "1A":
@@ -145,7 +145,7 @@ export default defineComponent({
       }
 
       return { startDate, endDate: currentDate }
-    };
+    }
 
     const selectTab = (value) => {
       selectedTab.value = value
@@ -157,7 +157,7 @@ export default defineComponent({
       const filteredData = props.chartData.filter(item => {
         const itemDate = new Date(item.datetimeLastPrice)
         return itemDate >= startDate && itemDate <= endDate
-      });
+      })
       updateChart(filteredData)
     }
 
@@ -167,13 +167,13 @@ export default defineComponent({
 
     onMounted(() => {
       createChart()
-    });
+    })
 
     onUnmounted(() => {
       if (chartInstance) {
         chartInstance.destroy()
       }
-    });
+    })
 
     return {
       chartCanvas,

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
@@ -22,28 +22,28 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const getClass = (value) => {
-      if (value > 0) return 'positive';
-      if (value < 0) return 'negative';
-      return 'neutral';
-    };
+      if (value > 0) return 'positive'
+      if (value < 0) return 'negative'
+      return 'neutral'
+    }
 
     const formatSign = (value) => {
-      if (value > 0) return `+${value.toFixed(2)}`;
-      if (value < 0) return `${value.toFixed(2)}`;
-      return value.toFixed(2);
-    };
+      if (value > 0) return `+${value.toFixed(2)}`
+      if (value < 0) return `${value.toFixed(2)}`
+      return value.toFixed(2)
+    }
 
     const handleRowClick = () => {
-      emit('instrumentSelected', props.instrument.codeInstrument);
-    };
+      emit('instrumentSelected', props.instrument.codeInstrument)
+    }
 
     return {
       getClass,
       formatSign,
       handleRowClick
-    };
+    }
   }
-});
+})
 </script>
 
 <style scoped>
