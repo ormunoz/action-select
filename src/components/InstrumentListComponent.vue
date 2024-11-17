@@ -62,7 +62,6 @@ export default defineComponent({
     const instruments = ref([...props.instrumentData]);
     const sortKey = ref('name');
     const sortAsc = ref(true);
-
     // Computed para instrumentos ordenados
     const sortedInstruments = computed(() => {
       return instruments.value.slice().sort((a, b) => {
