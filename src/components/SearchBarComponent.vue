@@ -24,17 +24,16 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue' 
-import { getAllInstrument } from '../services/instrumentsServices' 
+import { getAllInstrument } from '../services/indexServices' 
 
 export default {
     setup(props, { emit }) {
-        const query = ref('')  // Lo que el usuario escribe
+        const query = ref('') 
         const showDropdown = ref(false) 
-        const instrumentData = ref([])  // Lista de todos los instrumentos
+        const instrumentData = ref([]) 
 
         const init = async () => {
             try {
-                // Cargar los datos de los instrumentos
                 const response = await getAllInstrument() 
                 instrumentData.value = response 
             } catch (error) {
@@ -42,7 +41,7 @@ export default {
             }
         } 
 
-        onMounted(init)  // Cargar los datos cuando el componente se monte
+        onMounted(init)
 
         const filteredInstruments = computed(() => {
             if (!query.value || !Array.isArray(instrumentData.value)) {
@@ -79,7 +78,6 @@ export default {
 
 <style scoped>
 .search-form {
-    border: 1px solid #444;
     border-radius: 50%;
 }
 
